@@ -1,14 +1,14 @@
 #include "helper.h"
 
-
 /*
 Used to simulate a bus operation and to capture the snoop results of last
 level caches of other processors
 */
-void BusOperation(char BusOp, unsigned int Address, char *SnoopResult);
-SnoopResult = GetSnoopResult(Address)
+void BusOperation(char BusOp, unsigned int Address, char *SnoopResult)
+{
+    SnoopResult = GetSnoopResult(Address);
 #ifndef SILENT
-printf("BusOp: %d, Address: %h, Snoop Result: %d\n",*SnoopResult);
+    printf("BusOp: %d, Address: %x, Snoop Result: %d\n", *SnoopResult);
 #endif
 }
 /*
@@ -16,8 +16,6 @@ Used to simulate the reporting of snoop results by other caches
 */
 char GetSnoopResult(unsigned int Address)
 {
-
-
 }
 /*
 Used to report the result of our snooping bus operations performed by other
@@ -26,7 +24,7 @@ caches
 void PutSnoopResult(unsigned int Address, char SnoopResult)
 {
 #ifndef SILENT
-printf("SnoopResult: Address %h, SnoopResult: %d\n", Address,SnoopResult);
+    printf("SnoopResult: Address %x, SnoopResult: %d\n", Address, SnoopResult);
 }
 #endif
 /*
@@ -35,7 +33,7 @@ Used to simulate communication to our upper level cache
 void MessageToCache(char Message, unsigned int Address)
 {
 #ifndef SILENT
-printf("L2: %d %h\n", Message, Address);
+    printf("L2: %d %x\n", Message, Address);
 #endif
 }
 
@@ -153,12 +151,12 @@ int verify(uint32_t address, cLine cache[][SET_ASS])
         int y = findMatch(index, tempTag, cache);
         if (y >= 0)
         {
-            printf("empty but, hit Baby! %d\n",y);
+            printf("empty but, hit Baby! %d\n", y);
             return y;
         }
         else
         {
-            printf("miss with space %d\n",x);
+            printf("miss with space %d\n", x);
             return x;
         }
     }
@@ -179,7 +177,7 @@ int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
             return 0; //hit
         i++;
     }
-    return -1;//miss
+    return -1; //miss
 }
 int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
 {
@@ -193,15 +191,15 @@ int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
     return -1; //not in line
 }
 
-int findEmpty(uint32_t index,cLine cache[][SET_ASS])
+int findEmpty(uint32_t index, cLine cache[][SET_ASS])
 {
     int i = 0;
     while (i < SET_ASS)
     {
         if (cache[index][i].valid == false)
         {
-            printf("\n%d\n",i);
-            printf("Empty line: %d",i);
+            printf("\n%d\n", i);
+            printf("Empty line: %d", i);
             return i; //hit
         }
         i++;
