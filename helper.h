@@ -23,6 +23,7 @@
 //parameters derived
 typedef struct cLine
 {
+    char mesi;
     uint8_t pLUR;      //bits for the way
     bool valid;
     bool dirty;
