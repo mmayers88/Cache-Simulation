@@ -128,23 +128,21 @@ uint32_t makeMask(uint32_t a, uint32_t b)
 }
 int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way)
 {
-    uint32_t index = makeMask(7, 20) & address;
-    //index = index >> 6;
-    index = 2;
+    uint32_t index = makeMask(7, 22) & address;
+    index = index >> 6;
     cache[index][way].byte_sel = address & 0x3F; //lower 6 bits
-    uint32_t tag = makeMask(21, 32) & address;
-    cache[index][way].tag = tag >> 20;
+    uint32_t tag = makeMask(23, 32) & address;
+    cache[index][way].tag = tag >> 22;
     cache[index][way].valid = true;
     cache[index][way].dirty = true;
 }
 
 int verify(uint32_t address, cLine cache[][SET_ASS])
 {
-    uint32_t index = makeMask(7, 20) & address;
-    //index = index >> 6;
-    index = 2;
-    uint32_t tempTag = makeMask(21, 32) & address;
-    tempTag = tempTag >> 20;
+    uint32_t index = makeMask(7, 22) & address;
+    index = index >> 6;
+    uint32_t tempTag = makeMask(23, 32) & address;
+    tempTag = tempTag >> 22;
     int x = emptyInLine(index, tempTag, cache);
     if (x >= 0)
     { // looking for empty place
@@ -209,7 +207,9 @@ int findEmpty(uint32_t index, cLine cache[][SET_ASS])
 
 int getIndex(uint32_t address)
 {
-    uint32_t index = makeMask(7, 20) & address;
-    index = index >> 6;
-    return index;
+    printf("in Index");
+    //uint32_t index = makeMask(7, 22) & address;
+    //index = index >> 6;
+    //index = 2;
+    return 2;
 };

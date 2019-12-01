@@ -6,7 +6,7 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     int index;
     way = verify(address, cache);
     if (way == -1)
-        retrun - 1;
+        return - 1;
     else
     {
         index = getIndex(address);
@@ -21,7 +21,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     int index;
     way = verify(address, cache);
     if (way == -1)
-        retrun - 1;
+        return - 1;
     else
     {
         index = getIndex(address);

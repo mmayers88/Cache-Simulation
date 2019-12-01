@@ -8,14 +8,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdint.h>
-#include "mesi.h"
+#include <math.h>
 
 //parameters given
 #define CAPACITY 16000000
 #define LINE_SIZE 64
-#define SET_ASS 2
+#define SET_ASS 8
 //#define LINES (CAPACITY/LINE_SIZE) / SET_ASS
-#define LINES 3
+#define LINES 32768
 
 //has a write allocate policy
 // MESI protocol
@@ -96,3 +96,4 @@ int verify(uint32_t address, cLine cache[][SET_ASS]);
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
 int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
 int findEmpty(uint32_t index,cLine cache[][SET_ASS]);
+int getIndex(uint32_t address);

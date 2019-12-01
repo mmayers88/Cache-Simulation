@@ -1,4 +1,4 @@
-OBJS = helper.o project.o
+OBJS = helper.o project.o mesi.o
 READFILE = readme.txt
 VARIABLE=`cat $(READFILE)`
 
@@ -8,6 +8,8 @@ helper.o : helper.c
 	gcc helper.c -c
 project.o : project.c
 	gcc project.c -c
+mesi.o : mesi.c
+	gcc mesi.c -c
 clean:
 	rm $(OBJS) project
 run : project
