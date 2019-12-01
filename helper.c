@@ -206,3 +206,10 @@ int findEmpty(uint32_t index, cLine cache[][SET_ASS])
     }
     return -1; //not in line
 }
+
+int getIndex(uint32_t address)
+{
+    uint32_t index = makeMask(7, 20) & address;
+    index = index >> 6;
+    return index;
+};

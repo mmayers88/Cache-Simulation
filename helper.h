@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdint.h>
+#include "mesi.h"
 
 //parameters given
 #define CAPACITY 16000000
