@@ -135,6 +135,8 @@ int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way)
     cache[index][way].tag = tag >> 20;
     cache[index][way].valid = true;
     cache[index][way].dirty = true;
+    cache[index][way].mesi = 'E';
+
 }
 
 int verify(uint32_t address, cLine cache[][SET_ASS])
