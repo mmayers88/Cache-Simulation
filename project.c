@@ -4,16 +4,17 @@ Programmer:		Mikhail Mayers
 Date:			11/13/2019
 IDE:			MS Visual Studio Enterprise 2015/mingw32
 Purpose:	Project for Faust, simulating a cache	                                 */
-//#include "helper.h"
-#include "mesi.h"
+#include "helper.h"
 
 int main(int argc, char *argv[])
 {
     printf("starting\n\n");
-    initCache(cache);
+    //initCache(cache);
     printf("Init Cache...\n");
-    printf("%d",getIndex(0b10101010101010101010100000101010));
-    addToCLine(0b10101010101010101010100000101010, cache,1);
+    printf(" %x\n",getIndex(0b11111111111111111000000));
+    //printCache(cache);
+    addToCLine(0b11111111111111111000000, cache,7);
+    printf("added to cache\n");
     printCache(cache);
     verify(0b10101010101010101010100000101010, cache);
     //findEmpty(0b10101010101010101010100000101010, cache);
