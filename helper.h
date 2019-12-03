@@ -67,7 +67,7 @@ void BusOperation(char BusOp, unsigned int Address, char *SnoopResult);
 /*
 Used to simulate the reporting of snoop results by other caches
 */
-char GetSnoopResult(unsigned int Address);
+int GetSnoopResult(unsigned int Address);
 /*
 Used to report the result of our snooping bus operations performed by other
 caches

@@ -14,8 +14,22 @@ void BusOperation(char BusOp, unsigned int Address, char *SnoopResult)
 /*
 Used to simulate the reporting of snoop results by other caches
 */
-char GetSnoopResult(unsigned int Address)
+int GetSnoopResult(unsigned int Address)
 {
+    int8_t check;
+    check = Address & 0x3;
+    printf("%d\n", check);
+    if (check > 2)
+        return NOHIT;
+    else
+    {
+        if (check == 1)
+            return HITM;
+        else
+        {
+            return HIT;
+        }
+    }
 }
 /*
 Used to report the result of our snooping bus operations performed by other
@@ -136,7 +150,6 @@ int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way)
     cache[index][way].valid = true;
     cache[index][way].dirty = true;
     cache[index][way].mesi = 'E';
-
 }
 
 int verify(uint32_t address, cLine cache[][SET_ASS])
@@ -214,7 +227,6 @@ int getIndex(uint32_t address)
     return index;
 };
 
-
 //MESI------------------------------------------------------------
 int snoopInval(int address, cLine cache[][SET_ASS])
 {
@@ -222,7 +234,7 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     int index;
     way = verify(address, cache);
     if (way == -1)
-        return - 1;
+        return -1;
     else
     {
         index = getIndex(address);
@@ -237,7 +249,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     int index;
     way = verify(address, cache);
     if (way == -1)
-        return - 1;
+        return -1;
     else
     {
         index = getIndex(address);
