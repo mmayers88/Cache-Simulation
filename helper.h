@@ -33,7 +33,7 @@ typedef struct cLine
 } cLine;
 
 cLine cache[LINES][SET_ASS];
-bool pLUR[LINES][SET_ASS - 1]; //bits for the way
+bool pLRU[LINES][SET_ASS - 1]; //bits for the way
 
 uint32_t address;
 /*

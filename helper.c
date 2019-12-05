@@ -67,9 +67,10 @@ int printCache(cLine cache[][SET_ASS])
     {
         for (int i = 0; i < LINES; i++)
         {
-            printf("%x|%x|%x|%x|\n", cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag, cache[i][j].byte_sel);
+            if (cache[i][j].valid == 1)
+                printf("%x|%x|%x|%x|\n", cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag, cache[i][j].byte_sel);
         }
-        printf("\n");
+        //printf("\n");
     }
 }
 
@@ -100,8 +101,11 @@ int breakup(char *line)
 
     printf("\n %d %x\n", instruct[0], instruct[1]);
 
-    if (switchInstruction(instruct[0], instruct[1]))
-        return -1;
+    switchInstruction(instruct[0], instruct[1]);
+
+    //if (switchInstruction(instruct[0], instruct[1]))
+    //  return -1;
+    return 1;
 }
 
 int switchInstruction(int instruct, int address)

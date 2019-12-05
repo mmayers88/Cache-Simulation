@@ -8,6 +8,7 @@ Purpose:	Project for Faust, simulating a cache	                                 
 
 int main(int argc, char *argv[])
 {
+    /*
     printf("starting\n\n");
     //initCache(cache);
     printf("Init Cache...\n");
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])
     printCache(cache);
     verify(0b10101010101010101010100000101010, cache);
     //findEmpty(0b10101010101010101010100000101010, cache);
-
+*/
     FILE *fp;
 
     fp = fopen(argv[1], "r");
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     parser(fp);
-
+    printCache(cache);
     fclose(fp);
     return 0;
 }
