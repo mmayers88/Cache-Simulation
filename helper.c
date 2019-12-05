@@ -18,7 +18,7 @@ int GetSnoopResult(unsigned int Address)
 {
     int8_t check;
     check = Address & 0x3;
-    printf("%d\n", check);
+    printf("\nSnoop result: %d\n", check);
     if (check > 1)
         return NOHIT;
     else
@@ -90,7 +90,7 @@ int breakup(char *line)
 {
     char *token;
     int instruct[2];
-    printf("%s", line);
+    printf("%s\n", line);
 
     token = strtok(line, " ");
 
@@ -99,7 +99,7 @@ int breakup(char *line)
     token = strtok(NULL, " ");
     instruct[1] = (int)strtol(token, NULL, 16);
 
-    printf("\n %d %x\n", instruct[0], instruct[1]);
+    //printf("\n %d %x\n", instruct[0], instruct[1]);
 
     switchInstruction(instruct[0], instruct[1]);
 
@@ -179,9 +179,11 @@ int verify(uint32_t address, cLine cache[][SET_ASS])
 
 int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
 {
+    printf("Index: %x\n", getIndex(address));
     int way = verify(address, cache);
     if (way == 0) //need eviction
     {
+        printf("Eviction\n");
         //snoop phase
         char mesiB = GetSnoopResult(address);
         //request getway
@@ -196,6 +198,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     }
     if (way > 0) //HIT
     {
+        printf("HIT\n");
         way = way - 1;
         //update pLRU
         update(pLRU[getIndex(address)], way);
@@ -205,6 +208,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        printf("Miss Space\n");
         way = abs(way) - 1;
         //update pLRU
         update(pLRU[getIndex(address)], way);
