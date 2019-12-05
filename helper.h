@@ -25,7 +25,7 @@
 typedef struct cLine
 {
     char mesi;
-    uint8_t pLUR;      //bits for the way
+    uint8_t pLUR; //bits for the way
     bool valid;
     bool dirty;
     uint32_t tag;     //won't use the whole 32 bits
@@ -33,6 +33,7 @@ typedef struct cLine
 } cLine;
 
 cLine cache[LINES][SET_ASS];
+bool pLUR[LINES][SET_ASS - 1]; //bits for the way
 
 uint32_t address;
 /*
@@ -78,10 +79,6 @@ Used to simulate communication to our upper level cache
 */
 void MessageToCache(char Message, unsigned int Address);
 
-
-
-
-
 int initCache(cLine cache[][SET_ASS]);
 int printCache(cLine cache[][SET_ASS]);
 
@@ -91,18 +88,23 @@ int breakup(char *line);
 
 int switchInstruction(int instruct, int address);
 
-int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way);
+int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB);
 int verify(uint32_t address, cLine cache[][SET_ASS]);
+int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS]);
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
 int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
-int findEmpty(uint32_t index,cLine cache[][SET_ASS]);
+int findEmpty(uint32_t index, cLine cache[][SET_ASS]);
 int getIndex(uint32_t address);
 
 /*same for snoopWr, snoopX, and snoopInvalid*/
-int snoopInval(int address,cLine cache[][SET_ASS]);
+int snoopInval(int address, cLine cache[][SET_ASS]);
 
-int snoopRd(int address,cLine cache[][SET_ASS]);
+int snoopRd(int address, cLine cache[][SET_ASS]);
 
-int snoopWr(int address,cLine cache[][SET_ASS]);
+int snoopWr(int address, cLine cache[][SET_ASS]);
 
-int snoopX(int address,cLine cache[][SET_ASS]);
+int snoopX(int address, cLine cache[][SET_ASS]);
+
+int getway(bool pLRUL[]);
+
+int update(bool pLRUL[], int way);

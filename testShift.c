@@ -9,28 +9,17 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <math.h>
+#include "helper.h"
 
-char GetSnoopResult(unsigned int Address)
-{
-    int8_t check;
-    check = Address & 0x3;
-    printf("%d\n", check);
-    if (check > 2)
-        return NOHIT;
-    else
-    {
-        if (check == 1)
-            return HITM;
-        else
-        {
-            return HIT;
-        }
-    }
-};
+cLine cache2[3][4];
 
 int main()
 {
-    int address = 0xF1;
-
-    GetSnoopResult(address);
+    int way;
+    initCache(cache2);
+    printCache(cache2);
+    printf(" %x\n", getIndex(0b11111111111111111000000));
+    way = verify(0b1000000, cache2);
+    addToCLine(0b1000000, cache, way);
+    printCache(cache2);
 }

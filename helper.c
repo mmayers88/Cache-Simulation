@@ -19,7 +19,7 @@ int GetSnoopResult(unsigned int Address)
     int8_t check;
     check = Address & 0x3;
     printf("%d\n", check);
-    if (check > 2)
+    if (check > 1)
         return NOHIT;
     else
     {
@@ -109,6 +109,7 @@ int switchInstruction(int instruct, int address)
     switch (instruct)
     {
     case 0: //read request from L1 data cache
+        hitOrMissREAD(address, cache);
         break;
     case 1: //write request from L1 data cache
         break;
@@ -140,43 +141,76 @@ uint32_t makeMask(uint32_t a, uint32_t b)
 
     return r;
 }
-int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way)
+int getIndex(uint32_t address)
 {
     uint32_t index = makeMask(6, 20) & address;
     index = index >> 6;
+    return index;
+};
+
+int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB)
+{
+    uint32_t index = getIndex(address);
     cache[index][way].byte_sel = address & 0x3F; //lower 6 bits
     uint32_t tag = makeMask(21, 32) & address;
     cache[index][way].tag = tag >> 20;
     cache[index][way].valid = true;
     cache[index][way].dirty = true;
-    cache[index][way].mesi = 'E';
+    cache[index][way].mesi = mesiB;
 }
 
 int verify(uint32_t address, cLine cache[][SET_ASS])
 {
-    uint32_t index = makeMask(6, 20) & address;
-    index = index >> 6;
+    uint32_t index = getIndex(address);
     uint32_t tempTag = makeMask(21, 32) & address;
     tempTag = tempTag >> 20;
-    int x = emptyInLine(index, tempTag, cache);
-    if (x >= 0)
-    { // looking for empty place
-        int y = findMatch(index, tempTag, cache);
-        if (y >= 0)
-        {
-            printf("empty but, hit Baby! %d\n", y);
-            return y;
-        }
-        else
-        {
-            printf("miss with space %d\n", x);
-            return x;
-        }
-    }
-    else
+    int x = findMatch(index, tempTag, cache);
+    if (x > 0) //hit
+        return x;
+    x = findEmpty(index, cache);
+    if (x < 0) //miss with empty
+        return x;
+    return 0; //eviction must happen
+}
+
+int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
+{
+    int way = verify(address, cache);
+    if (way == 0) //need eviction
     {
-        printf("miss, line full\n");
-        return -1;
+        //snoop phase
+        char mesiB = GetSnoopResult(address);
+        //request getway
+        way = getway(pLRU[getIndex(address)]);
+        //evict line
+        //add line
+        addToCLine(address, cache, way, mesiB);
+        //update pLRU
+        update(pLRU[getIndex(address)], way);
+        //send signal to L1
+        return 0;
+    }
+    if (way > 0) //HIT
+    {
+        way = way - 1;
+        //update pLRU
+        update(pLRU[getIndex(address)], way);
+        //send signal to L1
+        printf("HIT %d\n", way);
+        return (way);
+    }
+    else //miss, but space
+    {
+        way = abs(way) - 1;
+        //update pLRU
+        update(pLRU[getIndex(address)], way);
+        //send signal to L1
+        //snoop phase
+        char mesiB = GetSnoopResult(address);
+        //add line
+        addToCLine(address, cache, way, mesiB);
+        printf("miss with space %d\n", way);
+        return (way);
     }
 }
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
@@ -198,7 +232,7 @@ int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
     while (i < SET_ASS)
     {
         if (cache[index][i].tag == testTag)
-            return i; //hit
+            return i + 1; //hit
         i++;
     }
     return -1; //not in line
@@ -211,21 +245,13 @@ int findEmpty(uint32_t index, cLine cache[][SET_ASS])
     {
         if (cache[index][i].valid == false)
         {
-            printf("\n%d\n", i);
             printf("Empty line: %d", i);
-            return i; //hit
+            return (-1 * (i + 1)); //empty line found
         }
         i++;
     }
-    return -1; //not in line
+    return 0; //not in line
 }
-
-int getIndex(uint32_t address)
-{
-    uint32_t index = makeMask(6, 20) & address;
-    index = index >> 6;
-    return index;
-};
 
 //MESI------------------------------------------------------------
 int snoopInval(int address, cLine cache[][SET_ASS])
@@ -257,3 +283,88 @@ int snoopRd(int address, cLine cache[][SET_ASS])
             cache[index][way].mesi = 'S';
     }
 };
+// LRU
+int getway(bool pLRUL[])
+{
+    if (pLRUL[0] == 1)
+    {
+        if (pLRUL[1] == 1)
+        {
+            if (pLRUL[2] == 1)
+                return 0;
+            else
+                return 1;
+        }
+        else
+        {
+            if (pLRUL[3] == 1)
+                return 2;
+            else
+                return 3;
+        }
+    }
+    else
+    {
+        if (pLRUL[4] == 1)
+        {
+            if (pLRUL[5] == 1)
+                return 4;
+            else
+                return 5;
+        }
+        else
+        {
+            if (pLRUL[6] == 1)
+                return 6;
+            else
+                return 7;
+        }
+    }
+}
+
+int update(bool pLRUL[], int way)
+{
+    switch (way)
+    {
+    case 0:
+        pLRUL[0] = 0;
+        pLRUL[1] = 0;
+        pLRUL[2] = 0;
+        return 1;
+    case 1:
+        pLRUL[0] = 0;
+        pLRUL[1] = 0;
+        pLRUL[2] = 1;
+        return 1;
+    case 2:
+        pLRUL[0] = 0;
+        pLRUL[1] = 1;
+        pLRUL[3] = 0;
+        return 1;
+    case 3:
+        pLRUL[0] = 0;
+        pLRUL[1] = 1;
+        pLRUL[3] = 1;
+        return 1;
+    case 4:
+        pLRUL[0] = 1;
+        pLRUL[4] = 0;
+        pLRUL[5] = 0;
+        return 1;
+    case 5:
+        pLRUL[0] = 1;
+        pLRUL[4] = 0;
+        pLRUL[5] = 1;
+        return 1;
+    case 6:
+        pLRUL[0] = 1;
+        pLRUL[4] = 1;
+        pLRUL[6] = 0;
+        return 1;
+    case 7:
+        pLRUL[0] = 1;
+        pLRUL[4] = 1;
+        pLRUL[6] = 1;
+        return 1;
+    }
+}
