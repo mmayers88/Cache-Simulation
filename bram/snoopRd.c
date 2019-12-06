@@ -1,4 +1,4 @@
-int snoopInval(int address, cLine cache[][SET_ASS])
+int snoopRd(int address, cLine cache[][SET_ASS])
 {
     int way;
     int index;
@@ -11,11 +11,11 @@ int snoopInval(int address, cLine cache[][SET_ASS])
         return NOHIT;
 
     if (cache[index][way-1].mesi == 'M'){
-        cache[index][way-1].mesi = 'I';
+        cache[index][way-1].mesi = 'S';
         //BusOperation() Maybe call BUS OPERATION HERE HITM
         return HITM;
     } else if (cache[index][way-1].mesi != 'I') {
-        cache[index][way-1].mesi = 'I';
+        cache[index][way-1].mesi = 'S';
         return HIT;
     } else {
         return NOHIT;
