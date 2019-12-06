@@ -204,12 +204,13 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         //request getway
         way = getway(pLRU[getIndex(address)]);
         //evict line
+        MessageToCache(4,returnAddress(getIndex(address),cache,way));
         //add line
         addToCLine(address, cache, way, mesiB);
         //update pLRU
         update(pLRU[getIndex(address)], way);
         //send signal to L1
-        MessageToCache();
+        MessageToCache(2,returnAddress(getIndex(address),cache,way));
         return 0;
     }
     if (way > 0) //HIT
@@ -237,6 +238,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         char mesiB = GetSnoopResult(address);
         //add line
         addToCLine(address, cache, way, mesiB);
+        MessageToCache(2,returnAddress(getIndex(address),cache,way));
         printf("miss with space %d\n", way);
         return (way);
     }
