@@ -121,12 +121,15 @@ int switchInstruction(int instruct, int address)
     case 2: //read request from L1 instruction cache
         break;
     case 3: //snooped invalidate command
+        PutSnoopResult(address, snoopInval(address, cache));
         break;
     case 4: //snooped read request
+        PutSnoopResult(address, snoopRd(address, cache));
         break;
     case 5: //snooped write request
         break;
     case 6: //snooped read with intent to modify requestnal
+        PutSnoopResult(address, snoopInval(address, cache));
         break;
     case 8: //clear the cache and reset all state
         break;
@@ -204,13 +207,13 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         //request getway
         way = getway(pLRU[getIndex(address)]);
         //evict line
-        MessageToCache(4,returnAddress(getIndex(address),cache,way));
+        MessageToCache(4, returnAddress(getIndex(address), cache, way));
         //add line
         addToCLine(address, cache, way, mesiB);
         //update pLRU
         update(pLRU[getIndex(address)], way);
         //send signal to L1
-        MessageToCache(2,returnAddress(getIndex(address),cache,way));
+        MessageToCache(2, returnAddress(getIndex(address), cache, way));
         return 0;
     }
     if (way > 0) //HIT
@@ -220,7 +223,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         //update pLRU
         update(pLRU[getIndex(address)], way);
         //send signal to L1
-        MessageToCache(2,returnAddress(getIndex(address),cache,way));
+        MessageToCache(2, returnAddress(getIndex(address), cache, way));
         printf("HIT %d\n", way);
         return (way);
     }
@@ -238,11 +241,43 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         char mesiB = GetSnoopResult(address);
         //add line
         addToCLine(address, cache, way, mesiB);
-        MessageToCache(2,returnAddress(getIndex(address),cache,way));
+        MessageToCache(2, returnAddress(getIndex(address), cache, way));
         printf("miss with space %d\n", way);
         return (way);
     }
 }
+int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
+{
+
+    // Hit or miss
+    int i = hitOrMissREAD(address, cache) - 1;
+
+    // If hit
+    if (i > 0)
+    {
+        fprint("Hit and M");
+        cache[index][way].mesi = 'M';
+        update(pLRU[getIndex(address)], way);
+    }
+    // If miss and space
+    else if (i < 0)
+    {
+        frpint("Miss and space");
+        PutSnoopResult(address
+		cache[index][way].mesi = 'M';
+		update(pLRU[getIndex(address)], way);
+    }
+    // If miss and full
+    else
+    {
+        fprint("Miss and full");
+        //evict
+        addToCLine(address, cache, way, mesiB);
+        cache[index][way].mesi = 'M';
+        update(pLRU[getIndex(address)], way);
+        //BusOperation();
+    }
+};
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
 {
     int i = 0;
@@ -287,23 +322,30 @@ int findEmpty(uint32_t index, cLine cache[][SET_ASS])
 int snoopInval(int address, cLine cache[][SET_ASS])
 {
     int way;
-    int index;
-    
+    int index = getIndex(address);
+
     uint32_t tempTag = makeMask(21, 32) & address;
     tempTag = tempTag >> 20;
-    way = findMatch(getIndex(address), tempTag, cache);
-    
+    way = findMatch(index, tempTag, cache);
+
     if (way == -1)
         return NOHIT;
+    //PutSnoopResult() NOHIT
 
-    if (cache[index][way-1].mesi == 'M'){
-        cache[index][way-1].mesi = 'I';
-        //BusOperation() Maybe call BUS OPERATION HERE HITM
+    if (cache[index][way - 1].mesi == 'M')
+    {
+        cache[index][way - 1].mesi = 'I';
+        MessageToCache(3, returnAddress(getIndex(address), cache, way));
         return HITM;
-    } else if (cache[index][way-1].mesi != 'I') {
-        cache[index][way-1].mesi = 'I';
+    }
+    else if (cache[index][way - 1].mesi != 'I')
+    {
+        cache[index][way - 1].mesi = 'I';
+        MessageToCache(3, returnAddress(getIndex(address), cache, way));
         return HIT;
-    } else {
+    }
+    else
+    {
         return NOHIT;
     }
 };
@@ -311,23 +353,28 @@ int snoopInval(int address, cLine cache[][SET_ASS])
 int snoopRd(int address, cLine cache[][SET_ASS])
 {
     int way;
-    int index;
-    
+    int index = getIndex(address);
+
     uint32_t tempTag = makeMask(21, 32) & address;
     tempTag = tempTag >> 20;
-    way = findMatch(getIndex(address), tempTag, cache);
-    
+    way = findMatch(index, tempTag, cache);
+
     if (way == -1)
         return NOHIT;
-
-    if (cache[index][way-1].mesi == 'M'){
-        cache[index][way-1].mesi = 'S';
-        //BusOperation() Maybe call BUS OPERATION HERE HITM
+    //PutSnoopResult()  Maybe call BUS OPERATION HERE HITM
+    if (cache[index][way - 1].mesi == 'M')
+    {
+        cache[index][way - 1].mesi = 'S';
+        //PutSnoopResult() Maybe call BUS OPERATION HERE HITM
         return HITM;
-    } else if (cache[index][way-1].mesi != 'I') {
-        cache[index][way-1].mesi = 'S';
+    }
+    else if (cache[index][way - 1].mesi != 'I')
+    {
+        cache[index][way - 1].mesi = 'S';
         return HIT;
-    } else {
+    }
+    else
+    {
         return NOHIT;
     }
 };
