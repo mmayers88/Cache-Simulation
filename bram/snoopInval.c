@@ -7,6 +7,9 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     tempTag = tempTag >> 20;
     way = findMatch(getIndex(address), tempTag, cache);
     
+    if (way == -1)
+        return NOHIT;
+
     if (cache[index][way-1].mesi == 'M'){
         cache[index][way-1].mesi = 'I';
         //BusOperation() Maybe call BUS OPERATION HERE HITM
