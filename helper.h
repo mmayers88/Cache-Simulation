@@ -87,6 +87,8 @@ int parser(FILE *fp);
 int breakup(char *line);
 
 int switchInstruction(int instruct, int address);
+uint32_t makeMask(uint32_t a, uint32_t b);
+uint32_t returnAddress(uint32_t index, cLine cache[][SET_ASS], int way);
 
 int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB);
 int verify(uint32_t address, cLine cache[][SET_ASS]);

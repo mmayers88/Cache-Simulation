@@ -16,10 +16,11 @@ cLine cache2[3][4];
 int main()
 {
     int way;
-    initCache(cache2);
-    printCache(cache2);
-    printf(" %x\n", getIndex(0b11111111111111111000000));
-    way = verify(0b1000000, cache2);
-    addToCLine(0b1000000, cache, way);
-    printCache(cache2);
+    long int dat;
+    int tag = 0x45;
+    int index = 0x29;
+    int bits = 0x6;
+
+    dat = ((tag << 21)|(index << 6)| bits);
+    printf("%lx\n",dat);
 }

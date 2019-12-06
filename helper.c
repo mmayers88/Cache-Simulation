@@ -39,8 +39,9 @@ void PutSnoopResult(unsigned int Address, char SnoopResult)
 {
 #ifndef SILENT
     printf("SnoopResult: Address %x, SnoopResult: %d\n", Address, SnoopResult);
-}
 #endif
+}
+
 /*
 Used to simulate communication to our upper level cache
 */
@@ -145,6 +146,12 @@ uint32_t makeMask(uint32_t a, uint32_t b)
 
     return r;
 }
+uint32_t returnAddress(uint32_t index, cLine cache[][SET_ASS], int way)
+{
+    uint32_t address = 0;
+    address = ((cache[index][way].tag << 20)|(index << 6)| cache[index][way].byte_sel);
+};
+
 int getIndex(uint32_t address)
 {
     uint32_t index = makeMask(6, 20) & address;
@@ -185,7 +192,9 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     {
         printf("Eviction\n");
         //snoop phase
-        char mesiB = GetSnoopResult(address);
+        int SnoopRes = GetSnoopResult(address);
+        // do something with SnoopRes
+        int mesiB = 'A';
         //request getway
         way = getway(pLRU[getIndex(address)]);
         //evict line
