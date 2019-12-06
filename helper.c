@@ -246,36 +246,57 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         return (way);
     }
 }
-int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
+int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
 {
+    printf("Index: %x\n", getIndex(address));
+    int way = verify(address, cache);
+    int SnoopRes = GetSnoopResult(address);
+    int mesiB;
+    if (way == 0) //need eviction
+    {
+        printf("Eviction\n");
+        //snoop phase
+        //request getway
+        way = getway(pLRU[getIndex(address)]);
+        //evict line
+        MessageToCache(4, returnAddress(getIndex(address), cache, way));
 
-    // Hit or miss
-    int i = hitOrMissREAD(address, cache) - 1;
-
-    // If hit
-    if (i > 0)
-    {
-        fprint("Hit and M");
-        cache[index][way].mesi = 'M';
+        //add line
+        addToCLine(address, cache, way, 'M');
+        //set dirty
+        //update pLRU
         update(pLRU[getIndex(address)], way);
+        //send signal to L1
+        MessageToCache(1, returnAddress(getIndex(address), cache, way));
+        return 0;
     }
-    // If miss and space
-    else if (i < 0)
+    if (way > 0) //HIT
     {
-        frpint("Miss and space");
-        PutSnoopResult(address
-		cache[index][way].mesi = 'M';
-		update(pLRU[getIndex(address)], way);
-    }
-    // If miss and full
-    else
-    {
-        fprint("Miss and full");
-        //evict
-        addToCLine(address, cache, way, mesiB);
-        cache[index][way].mesi = 'M';
+        printf("HIT\n");
+        way = way - 1;
+        //tell caches we hit
+        //change MESI char M
+        //Set Dirty bit
+        //update pLRU
         update(pLRU[getIndex(address)], way);
-        //BusOperation();
+        //send signal to L1
+        MessageToCache(1, returnAddress(getIndex(address), cache, way));
+        printf("HIT %d\n", way);
+        return (way);
+    }
+    else //miss, but space
+    {
+        printf("Miss Space\n");
+        way = abs(way) - 1;
+        //bus ops readX
+        addToCLine(address, cache, way, 'M');
+        //Set Dirty bit
+        //update pLRU
+        update(pLRU[getIndex(address)], way);
+        //send signal to L1
+        MessageToCache(1, returnAddress(getIndex(address), cache, way));
+        printf("miss with space %d\n", way);
+        return (way);
     }
 };
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
