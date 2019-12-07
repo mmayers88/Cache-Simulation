@@ -117,6 +117,7 @@ int switchInstruction(int instruct, int address)
         hitOrMissREAD(address, cache);
         break;
     case 1: //write request from L1 data cache
+        hitOrMissWRITE(address, cache);
         break;
     case 2: //read request from L1 instruction cache
         break;
@@ -233,14 +234,15 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         way = abs(way) - 1;
         //update pLRU
         update(pLRU[getIndex(address)], way);
-        //send signal to L1
+
+        //busop
         if (SnoopRes > 1)
             mesiB = 'E';
         else
-            mesiB = 'S';
-        char mesiB = GetSnoopResult(address);
+            mesiB = 'S
         //add line
         addToCLine(address, cache, way, mesiB);
+        //talk to L1
         MessageToCache(2, returnAddress(getIndex(address), cache, way));
         printf("miss with space %d\n", way);
         return (way);
@@ -274,6 +276,7 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     {
         printf("HIT\n");
         way = way - 1;
+        //busop(invalidate)
         //tell caches we hit
         //change MESI char M
         //Set Dirty bit
