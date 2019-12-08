@@ -6,7 +6,7 @@ level caches of other processors
 */
 void BusOperation(char BusOp, unsigned int Address, char *SnoopResult)
 {
-    SnoopResult = GetSnoopResult(Address);
+    *SnoopResult = GetSnoopResult(Address);
 #ifndef SILENT
     printf("BusOp: %d, Address: %x, Snoop Result: %d\n", *SnoopResult);
 #endif
@@ -54,7 +54,7 @@ void MessageToCache(char Message, unsigned int Address)
 
 int initCache(cLine cache[][SET_ASS])
 {
-    cLine line = {false, false, 0, 0};
+    cLine line = {'I', false, false, 0, 0};
     for (int j = 0; j < SET_ASS; j++)
         for (int i = 0; i < LINES; i++)
         {
@@ -69,7 +69,7 @@ int printCache(cLine cache[][SET_ASS])
         for (int i = 0; i < LINES; i++)
         {
             if (cache[i][j].valid == 1)
-                printf("%x|%x|%x|%x|\n", cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag, cache[i][j].byte_sel);
+                printf("%c|%x|%x|%x|%x|\n", cache[i][j].mesi, cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag, cache[i][j].byte_sel);
         }
         //printf("\n");
     }
@@ -191,41 +191,39 @@ int verify(uint32_t address, cLine cache[][SET_ASS])
 int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
 {
     printf("Index: %x\n", getIndex(address));
+    uint32_t index = getIndex(address);
     int way = verify(address, cache);
-    int SnoopRes = GetSnoopResult(address);
+    int SnoopRes;
     int mesiB;
     if (way == 0) //need eviction
     {
-        //fine space getway
-        //evict contents
-            //IF M, GetLine L1, the Evict from L1
-            //Tell L1 to evict,toss it(going to write over)
-        //Update pLRU
-        //BUSOP(READ)
-            //NOHIT Exclusivr
-            //HIT or HITM Shared
-        //Tell L1
-
-
         printf("Eviction\n");
-        //snoop phase
-
-        // do something with SnoopRes
+        //fine space getway
+        way = getway(pLRU[getIndex(address)]);
+        //evict contents
+        //IF M, GetLine L1, the Evict from L1
+        if (cache[index][way].mesi == 'M')
+        {
+            MessageToCache(EVICTLINE, returnAddress(getIndex(address), cache, way));
+            //write back to DRAM
+            BusOperation(WRITE, address, &SnoopRes);
+        }
+        //Tell L1 to evict,toss it(going to write over)
+        else
+            MessageToCache(INVALIDATELINE, returnAddress(getIndex(address), cache, way));
+        //Update pLRU
+        update(pLRU[getIndex(address)], way);
+        //BUSOP(READ)
+        BusOperation(READ, address, &SnoopRes);
         if (SnoopRes > 1)
+            //NOHIT Exclusive
             mesiB = 'E';
         else
+            //HIT or HITM Shared
             mesiB = 'S';
-
-        //request getway
-        way = getway(pLRU[getIndex(address)]);
-        //evict line
-        MessageToCache(4, returnAddress(getIndex(address), cache, way));
-        //add line
         addToCLine(address, cache, way, mesiB);
-        //update pLRU
-        update(pLRU[getIndex(address)], way);
         //send signal to L1
-        MessageToCache(2, returnAddress(getIndex(address), cache, way));
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
         return 0;
     }
     if (way > 0) //HIT
@@ -235,107 +233,92 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         //update pLRU
         update(pLRU[getIndex(address)], way);
         //send signal to L1
-        MessageToCache(2, returnAddress(getIndex(address), cache, way));
-        printf("HIT %d\n", way);
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
         return (way);
     }
     else //miss, but space
     {
-        //Update pLRU
-        //BUSOP(READ)
-            //NOHIT Exclusivr
-            //HIT or HITM Shared
-        //Tell L1
-
-        printf("Miss Space\n");
         way = abs(way) - 1;
-        //update pLRU
+        //Update pLRU
         update(pLRU[getIndex(address)], way);
-
-        //busop
+        //BUSOP(READ)
+        BusOperation(READ, address, &SnoopRes);
         if (SnoopRes > 1)
+            //NOHIT Exclusive
             mesiB = 'E';
         else
-            mesiB = 'S'
-        //add line
+            //HIT or HITM Shared
+            mesiB = 'S';
         addToCLine(address, cache, way, mesiB);
-        //talk to L1
-        MessageToCache(2, returnAddress(getIndex(address), cache, way));
-        printf("miss with space %d\n", way);
+        //send signal to L1
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
         return (way);
     }
 }
 int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
 {
     printf("Index: %x\n", getIndex(address));
+    uint32_t index = getIndex(address);
     int way = verify(address, cache);
     int SnoopRes = GetSnoopResult(address);
     int mesiB;
     if (way == 0) //need eviction
     {
         //find getway
-        //evict
-            //if M flush: Get From L1, Evict L1, busOp(write)
-            //toss it 
-        //busop(invalidate)
-        //tell caches we hit
-        //change MESI char M
-        //Set Dirty bit
-        //update pLRU
-        printf("Eviction\n");
-        //snoop phase
-        //request getway
         way = getway(pLRU[getIndex(address)]);
-        //evict line
-        MessageToCache(4, returnAddress(getIndex(address), cache, way));
-
-        //add line
-        addToCLine(address, cache, way, 'M');
-        //set dirty
+        //if M flush: Get From L1, Evict L1, busOp(write)
+        if (cache[index][way].mesi == 'M')
+        {
+            MessageToCache(EVICTLINE, returnAddress(getIndex(address), cache, way));
+            //write back to DRAM
+            BusOperation(WRITE, address, &SnoopRes);
+        }
+        //Tell L1 to evict,toss it(going to write over)
+        else
+            MessageToCache(INVALIDATELINE, returnAddress(getIndex(address), cache, way));
+        //busop(invalidate)
+        BusOperation(RWIM, address, &SnoopRes);
+        //change MESI char M
+        mesiB = 'M';
+        //DIRTYbit set
+        cache[index][way].dirty = true;
+        //write new line
+        addToCLine(address, cache, way, mesiB);
         //update pLRU
         update(pLRU[getIndex(address)], way);
-        //send signal to L1
-        MessageToCache(1, returnAddress(getIndex(address), cache, way));
+        //tell L1
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
+        printf("Eviction\n");
         return 0;
     }
     if (way > 0) //HIT
     {
-        //Bus OP(Invalidate)
-        //mesiB = M
-        //set Dirty bit
-        //update pLRU
-        //Send to L1
-
         printf("HIT\n");
         way = way - 1;
-        //busop(invalidate)
-        //tell caches we hit
-        //change MESI char M
-        //Set Dirty bit
+        //Bus OP(Invalidate)
+        BusOperation(INVALIDATE, address, &SnoopRes);
+        //mesiB = M
+        //set Dirty bit
+        cache[index][way].dirty = true;
         //update pLRU
         update(pLRU[getIndex(address)], way);
-        //send signal to L1
-        MessageToCache(1, returnAddress(getIndex(address), cache, way));
-        printf("HIT %d\n", way);
+        //Send to L1
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
         return (way);
     }
     else //miss, but space
     {
-        //Busop(ReadX)
-        //mesiB = M
-        //set Dirty bit
-        //update pLRU
-        //Send to L1
-        printf("Miss Space\n");
-        way = abs(way) - 1;
-        //bus ops readX
-        addToCLine(address, cache, way, 'M');
-        //Set Dirty bit
+        BusOperation(RWIM, address, &SnoopRes);
+        //change MESI char M
+        mesiB = 'M';
+        //DIRTYbit set
+        cache[index][way].dirty = true;
+        //write new line
+        addToCLine(address, cache, way, mesiB);
         //update pLRU
         update(pLRU[getIndex(address)], way);
-        //send signal to L1
-        MessageToCache(1, returnAddress(getIndex(address), cache, way));
-        printf("miss with space %d\n", way);
+        MessageToCache(SENDLINE, returnAddress(getIndex(address), cache, way));
+        printf("Eviction\n");
         return (way);
     }
 };
@@ -430,7 +413,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     way = findMatch(index, tempTag, cache);
 
     if (way == -1)
-    //putsnoop NOHIT
+        //putsnoop NOHIT
         return NOHIT;
     //PutSnoopResult()  Maybe call BUS OPERATION HERE HITM
     if (cache[index][way - 1].mesi == 'M')

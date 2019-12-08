@@ -25,7 +25,6 @@
 typedef struct cLine
 {
     char mesi;
-    uint8_t pLUR; //bits for the way
     bool valid;
     bool dirty;
     uint32_t tag;     //won't use the whole 32 bits

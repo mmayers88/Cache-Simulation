@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     printf("starting\n\n");
     //initCache(cache);
     printf("Init Cache...\n");
+    /*
     printf(" %x\n",getIndex(0b11111111111111111000000));
     //printCache(cache);
     addToCLine(0b11111111111111111000000, cache,7,'E');
@@ -21,15 +22,15 @@ int main(int argc, char *argv[])
     printf("%x\n",0b1000000000000001000000);
     addToCLine(0b1000000000000001000000, cache, 7,'E');
     printf("%x",returnAddress(getIndex(0b1000000000000001000000),cache,7));
-
+*/
     FILE *fp;
 
     fp = fopen(argv[1], "r");
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-    //parser(fp);
-    //printCache(cache);
+    parser(fp);
+    printCache(cache);
     fclose(fp);
     return 0;
 }
