@@ -3,6 +3,7 @@ int snoopInval(int address, cLine cache[][SET_ASS])
 {
     int way;
     int index = getIndex(address);
+    int SnoopRes;
 
     uint32_t tempTag = makeMask(21, 32) & address;
     tempTag = tempTag >> 20;
@@ -21,7 +22,7 @@ int snoopInval(int address, cLine cache[][SET_ASS])
         //tell L1 Invalidate
         MessageToCache(EVICTLINE, address);
         //bus op write
-        BusOperation(WRITE, address, 'M'); // I'm the only one to have this, sending M 
+        BusOperation(WRITE, address, &SnoopRes); // I'm the only one to have this, sending M 
         //set mesiB I
         cache[index][way - 1].mesi = 'I';
         MessageToCache(INVALIDATELINE, address);
@@ -65,7 +66,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
         //getline L1
         MessageToCache(GETLINE, address);
         //busop write
-        BusOperation(WRITE, address, 'M'); // I'm the only one to have this, sending M 
+        BusOperation(WRITE, address, &SnoopRes); // I'm the only one to have this, sending M 
         //change mesiB shared
         cache[index][way - 1].mesi = 'S';
         return HITM;
