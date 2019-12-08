@@ -196,6 +196,17 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     int mesiB;
     if (way == 0) //need eviction
     {
+        //fine space getway
+        //evict contents
+            //IF M, GetLine L1, the Evict from L1
+            //Tell L1 to evict,toss it(going to write over)
+        //Update pLRU
+        //BUSOP(READ)
+            //NOHIT Exclusivr
+            //HIT or HITM Shared
+        //Tell L1
+
+
         printf("Eviction\n");
         //snoop phase
 
@@ -230,6 +241,12 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        //Update pLRU
+        //BUSOP(READ)
+            //NOHIT Exclusivr
+            //HIT or HITM Shared
+        //Tell L1
+
         printf("Miss Space\n");
         way = abs(way) - 1;
         //update pLRU
@@ -239,7 +256,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         if (SnoopRes > 1)
             mesiB = 'E';
         else
-            mesiB = 'S
+            mesiB = 'S'
         //add line
         addToCLine(address, cache, way, mesiB);
         //talk to L1
@@ -256,6 +273,15 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     int mesiB;
     if (way == 0) //need eviction
     {
+        //find getway
+        //evict
+            //if M flush: Get From L1, Evict L1, busOp(write)
+            //toss it 
+        //busop(invalidate)
+        //tell caches we hit
+        //change MESI char M
+        //Set Dirty bit
+        //update pLRU
         printf("Eviction\n");
         //snoop phase
         //request getway
@@ -274,6 +300,12 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     }
     if (way > 0) //HIT
     {
+        //Bus OP(Invalidate)
+        //mesiB = M
+        //set Dirty bit
+        //update pLRU
+        //Send to L1
+
         printf("HIT\n");
         way = way - 1;
         //busop(invalidate)
@@ -289,6 +321,11 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        //Busop(ReadX)
+        //mesiB = M
+        //set Dirty bit
+        //update pLRU
+        //Send to L1
         printf("Miss Space\n");
         way = abs(way) - 1;
         //bus ops readX
@@ -358,12 +395,20 @@ int snoopInval(int address, cLine cache[][SET_ASS])
 
     if (cache[index][way - 1].mesi == 'M')
     {
+        //put snoop HITM
+        //GETLINE L1
+        //tell L1 Invalidate
+        //bus op write
+        //set mesiB I
         cache[index][way - 1].mesi = 'I';
         MessageToCache(3, returnAddress(getIndex(address), cache, way));
         return HITM;
     }
     else if (cache[index][way - 1].mesi != 'I')
     {
+        //putsnoop result Hit
+        //set mesiB I and valid 0
+        //message to cache "you're trash"
         cache[index][way - 1].mesi = 'I';
         MessageToCache(3, returnAddress(getIndex(address), cache, way));
         return HIT;
@@ -384,16 +429,23 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     way = findMatch(index, tempTag, cache);
 
     if (way == -1)
+    //putsnoop NOHIT
         return NOHIT;
     //PutSnoopResult()  Maybe call BUS OPERATION HERE HITM
     if (cache[index][way - 1].mesi == 'M')
     {
+        //putsnoop HITM
+        //getline L1
+        //busop write
+        //change mesiB shared
         cache[index][way - 1].mesi = 'S';
         //PutSnoopResult() Maybe call BUS OPERATION HERE HITM
         return HITM;
     }
     else if (cache[index][way - 1].mesi != 'I')
     {
+        //putsnoop hit
+        // set mesiB S
         cache[index][way - 1].mesi = 'S';
         return HIT;
     }
