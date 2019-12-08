@@ -358,7 +358,8 @@ int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
     while (i < SET_ASS)
     {
         if (cache[index][i].tag == testTag)
-            return i + 1; //hit
+            if (cache[index][i].valid == 1)
+                return i + 1; //hit
         i++;
     }
     return -1; //not in line
