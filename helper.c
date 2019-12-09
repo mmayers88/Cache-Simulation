@@ -122,19 +122,21 @@ int switchInstruction(int instruct, int address)
     case 2: //read request from L1 instruction cache
         break;
     case 3: //snooped invalidate command
-        PutSnoopResult(address, snoopInval(address, cache));
+        snoopInval(address, cache);
         break;
     case 4: //snooped read request
-        PutSnoopResult(address, snoopRd(address, cache));
+        snoopRd(address, cache);
         break;
     case 5: //snooped write request
         break;
     case 6: //snooped read with intent to modify requestnal
-        PutSnoopResult(address, snoopInval(address, cache));
+        snoopX(address, cache);
         break;
     case 8: //clear the cache and reset all state
+        initCache(cache);
         break;
     case 9: //print contents and state of each valid cache line (allow subsequent trace activity)
+        printCache(cache);
         break;
     default:
         return -1;
@@ -257,6 +259,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
         return (way);
     }
 }
+
 int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
 {
     printf("Index: %x\n", getIndex(address));
@@ -298,8 +301,10 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
         printf("HIT\n");
         way = way - 1;
         //Bus OP(Invalidate)
-        BusOperation(INVALIDATE, address, &SnoopRes);
+        if(cache[index][way].mesi ==  'S')
+            BusOperation(INVALIDATE, address, &SnoopRes);
         //mesiB = M
+        cache[index][way].mesi = 'M'
         //set Dirty bit
         cache[index][way].dirty = true;
         //update pLRU
@@ -342,7 +347,6 @@ int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS])
     int i = 0;
     while (i < SET_ASS)
     {
-        //printf("%c|%x|%x|%x|%x|\n", cache[index][i].mesi, cache[index][i].valid, cache[index][i].dirty, cache[index][i].tag, cache[index][i].byte_sel);
 
         if (cache[index][i].tag == testTag)
             if (cache[index][i].valid == true)
@@ -357,11 +361,8 @@ int findEmpty(uint32_t index, cLine cache[][SET_ASS])
     int i = 0;
     while (i < SET_ASS)
     {
-        //printf("%c|%x|%x|%x|%x|\n", cache[index][i].mesi, cache[index][i].valid, cache[index][i].dirty, cache[index][i].tag, cache[index][i].byte_sel);
-
         if (cache[index][i].valid == false)
         {
-            //printf("Empty line: %d", i);
             return (-1 * (i + 1)); //empty line found
         }
         i++;
@@ -383,23 +384,8 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     if (way == -1)
         PutSnoopResult(address, NOHIT);
     return NOHIT;
-    //PutSnoopResult() NOHIT
 
-    if (cache[index][way - 1].mesi == 'M')
-    {
-        //put snoop HITM
-        PutSnoopResult(address, HITM);
-        //GETLINE L1
-        //tell L1 Invalidate
-        MessageToCache(EVICTLINE, address);
-        //bus op write
-        BusOperation(WRITE, address, &SnoopRes); // I'm the only one to have this, sending M
-        //set mesiB I
-        cache[index][way - 1].mesi = 'I';
-        MessageToCache(INVALIDATELINE, address);
-        return HITM;
-    }
-    else if (cache[index][way - 1].mesi != 'I')
+    if (cache[index][way - 1].mesi != 'I')
     {
         //putsnoop result Hit
         PutSnoopResult(address, HIT);
@@ -441,6 +427,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
         BusOperation(WRITE, address, &SnoopRes); // I'm the only one to have this, sending M
         //change mesiB shared
         cache[index][way - 1].mesi = 'S';
+        cache[index][way - 1].dirty = 0;
         return HITM;
     }
     else if (cache[index][way - 1].mesi != 'I')
@@ -449,6 +436,52 @@ int snoopRd(int address, cLine cache[][SET_ASS])
         PutSnoopResult(address, HIT);
         // set mesiB S
         cache[index][way - 1].mesi = 'S';
+        return HIT;
+    }
+    else
+    {
+        return NOHIT;
+    }
+};
+int snoopX(int address, cLine cache[][SET_ASS])
+{
+    int way;
+    int index = getIndex(address);
+    int SnoopRes;
+
+    uint32_t tempTag = makeMask(21, 32) & address;
+    tempTag = tempTag >> 20;
+    way = findMatch(index, tempTag, cache);
+
+    if (way == -1)
+        PutSnoopResult(address, NOHIT);
+    return NOHIT;
+    //PutSnoopResult() NOHIT
+
+    if (cache[index][way - 1].mesi == 'M')
+    {
+        //put snoop HITM
+        PutSnoopResult(address, HITM);
+        //GETLINE L1
+        //tell L1 Invalidate
+        MessageToCache(EVICTLINE, address);
+        //bus op write
+        BusOperation(WRITE, address, &SnoopRes); // I'm the only one to have this, sending M
+        //set mesiB I
+        cache[index][way - 1].mesi = 'I';
+        cache[index][way - 1].valid = 0;
+        //release HITM
+        return HITM;
+    }
+    if (cache[index][way - 1].mesi != 'I')
+    {
+        //putsnoop result Hit
+        PutSnoopResult(address, HIT);
+        //set mesiB I and valid 0
+        //message to cache "you're trash"
+        cache[index][way - 1].mesi = 'I';
+        cache[index][way - 1].valid = 0;
+        MessageToCache(INVALIDATELINE, address);
         return HIT;
     }
     else
