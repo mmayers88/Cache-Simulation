@@ -4,11 +4,11 @@
 Used to simulate a bus operation and to capture the snoop results of last
 level caches of other processors
 */
-void BusOperation(char BusOp, unsigned int Address, char *SnoopResult)
+void BusOperation(int BusOp, unsigned int Address, int *SnoopResult)
 {
     *SnoopResult = GetSnoopResult(Address);
 #ifndef SILENT
-    printf("BusOp: %d, Address: %x, Snoop Result: %d\n", *SnoopResult);
+    printf("BusOp: %d, Address: %x, Snoop Result: %d\n", BusOp,Address,*SnoopResult);
 #endif
 }
 /*
@@ -35,7 +35,7 @@ int GetSnoopResult(unsigned int Address)
 Used to report the result of our snooping bus operations performed by other
 caches
 */
-void PutSnoopResult(unsigned int Address, char SnoopResult)
+void PutSnoopResult(unsigned int Address, int SnoopResult)
 {
 #ifndef SILENT
     printf("SnoopResult: Address %x, SnoopResult: %d\n", Address, SnoopResult);
@@ -45,7 +45,7 @@ void PutSnoopResult(unsigned int Address, char SnoopResult)
 /*
 Used to simulate communication to our upper level cache
 */
-void MessageToCache(char Message, unsigned int Address)
+void MessageToCache(int Message, unsigned int Address)
 {
 #ifndef SILENT
     printf("L2: %d %x\n", Message, Address);
@@ -304,7 +304,7 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
         if(cache[index][way].mesi ==  'S')
             BusOperation(INVALIDATE, address, &SnoopRes);
         //mesiB = M
-        cache[index][way].mesi = 'M'
+        cache[index][way].mesi = 'M';
         //set Dirty bit
         cache[index][way].dirty = true;
         //update pLRU
