@@ -22,3 +22,8 @@
 9 9
 4 fB9b17ae                          snooping a read of line we just invalidated
 9 9
+5 49b17ac                           snooping a write
+6 fB9b17ae                          snooping read with intent to modify nonexsistent line
+9 9
+6 49b17ac                           snooping read with intent to modify modified line
+9 9

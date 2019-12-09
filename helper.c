@@ -126,6 +126,7 @@ int switchInstruction(int instruct, int address)
         snoopRd(address, cache);
         break;
     case 5: //snooped write request
+        PutSnoopResult(address, NOHIT);
         break;
     case 6: //snooped read with intent to modify requestnal
         snoopX(address, cache);
