@@ -20,3 +20,5 @@
 9 9
 3 fB9b17ae                          this is an invalidate of way3
 9 9
+4 fB9b17ae                          snooping a read of line we just invalidated
+9 9

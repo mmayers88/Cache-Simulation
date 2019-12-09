@@ -1,5 +1,7 @@
 #include "helper.h"
-
+int missCount = 0;
+int writeCount = 0;
+int readCount = 0;
 /*
 Used to simulate a bus operation and to capture the snoop results of last
 level caches of other processors
@@ -107,12 +109,15 @@ int switchInstruction(int instruct, int address)
     {
     case 0: //read request from L1 data cache
         hitOrMissREAD(address, cache);
+        readCount++;
         break;
     case 1: //write request from L1 data cache
         hitOrMissWRITE(address, cache);
+        writeCount++;
         break;
     case 2: //read request from L1 instruction cache
         hitOrMissREADI(address, cache);
+        readCount++;
         break;
     case 3: //snooped invalidate command
         snoopInval(address, cache);
@@ -195,6 +200,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     int mesiB;
     if (way == 0) //need eviction
     {
+        missCount++;
         //printf("Eviction\n");
         //fine space getway
         way = getway(pLRU[getIndex(address)]);
@@ -236,6 +242,7 @@ int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        missCount++;
         way = abs(way) - 1;
         //Update pLRU
         update(pLRU[getIndex(address)], way);
@@ -263,6 +270,7 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     int mesiB;
     if (way == 0) //need eviction
     {
+        missCount++;
         //printf("Eviction\n");
         //find getway
         way = getway(pLRU[getIndex(address)]);
@@ -309,6 +317,7 @@ int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        missCount++;
         way = abs(way) - 1;
         BusOperation(RWIM, address, &SnoopRes);
         //change MESI char M
@@ -333,6 +342,7 @@ int hitOrMissREADI(uint32_t address, cLine cache[][SET_ASS])
     int mesiB;
     if (way == 0) //need eviction
     {
+        missCount++;
         //printf("Eviction\n");
         //fine space getway
         way = getway(pLRU[getIndex(address)]);
@@ -366,6 +376,7 @@ int hitOrMissREADI(uint32_t address, cLine cache[][SET_ASS])
     }
     else //miss, but space
     {
+        missCount++;
         way = abs(way) - 1;
         //Update pLRU
         update(pLRU[getIndex(address)], way);
@@ -437,13 +448,11 @@ int snoopInval(int address, cLine cache[][SET_ASS])
 
     if (way == 0)
     {
-        printf("\nhere\n");
         PutSnoopResult(address, NOHIT);
         return NOHIT;
     }
     if (cache[index][way - 1].mesi != 'I')
     {
-        printf("\nhere\n");
         //putsnoop result Hit
         PutSnoopResult(address, HIT);
         //set mesiB I and valid 0
@@ -634,3 +643,11 @@ int update(bool pLRUL[], int way)
         return 1;
     }
 }
+
+int complete()
+{
+    printf("\n===========================================================\n");
+    int hits = ((readCount+writeCount)-missCount);
+    printf("Reads: %d\tWrites: %d\tHits: %d\tMisses: %d", readCount, writeCount, hits,missCount);
+    printf("\nHit Ratio: %.2f%%\n",(((float)hits)/((float)(readCount+writeCount)))*100.0);
+};

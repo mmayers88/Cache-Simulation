@@ -35,6 +35,7 @@ typedef struct cLine
 cLine cache[LINES][SET_ASS];
 bool pLRU[LINES][SET_ASS - 1]; //bits for the way
 
+
 //uint32_t address;
 /*
 * Bus Operation types
@@ -112,3 +113,5 @@ int snoopX(int address, cLine cache[][SET_ASS]);
 int getway(bool pLRUL[]);
 
 int update(bool pLRUL[], int way);
+
+int complete();
