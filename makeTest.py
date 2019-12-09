@@ -8,7 +8,7 @@ NumNums = 100000
 seed(1)
 with open("text.txt", "w+") as file:
 	for i in range(NumNums):
-		instruct = randint(0, 9)
+		instruct = 0
 		if instruct == 7:
 			instruct = randint(0,2)
 		address = randint(0, 4294967295)

@@ -1,26 +1,27 @@
-8 8
+8 8                                 this Demo
 0 f79b17ae
-0 fD9b17ae
-0 fC9b17ae
+0 fD9b17ac                          this line will be shared, all others exclusive
+0 fC9b17ad
 0 fB9b17ae
 0 fA9b17ae
 0 f99b17ae
 0 f89b17ae
-0 019b17ae                          this fills the cache
+0 019b17ae                          filled the cache
 9 9
 0 29b17ae                           this is an eviction way 0
 9 9
-0 39b17ae                           this is an eviction way 4(pLRU out of order)
+0 39b17ac                           this is an eviction way 4(pLRU out of order)
 9 9
 0 49b17ac                           this is an eviction way 2(back in order)
 9 9
 0 49b17ac                           this will be a hit
-9 9
 1 49b17ab                           Sets way 2 to modified
 9 9
-3 fB9b17ae                          this is an invalidate of way3
+3 fB9b17ae                          this is an invalidate of way 3
 9 9
 4 fB9b17ae                          snooping a read of line we just invalidated
+1 fB9b17ae                          writing back to empty space
+1 f79b17ae                          evicting a write
 9 9
 5 49b17ac                           snooping a write
 6 fB9b17ae                          snooping read with intent to modify nonexsistent line

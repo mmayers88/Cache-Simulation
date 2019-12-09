@@ -15,3 +15,5 @@ run : project
 	./project text.txt
 silent : project
 	gcc -DSILENT helper.c project.c -o project
+output : project
+	./project text.txt > output.txt
