@@ -1,6 +1,6 @@
 /*
 Program Name:	project
-Programmer:		Mikhail Mayers
+Programmer:		Mikhail Mayers, Abram, Fouts, Roman Minko, Bader Al
 Date:			11/13/2019
 IDE:			MS Visual Studio Enterprise 2015/mingw32
 Purpose:	Project for Faust, simulating a cache	                                 */

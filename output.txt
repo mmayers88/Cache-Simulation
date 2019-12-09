@@ -16,101 +16,108 @@ BusOp: 1, Address: f89b17ae, Snoop Result: 2
 L2: 2 f89b1780
 BusOp: 1, Address: 19b17ae, Snoop Result: 2
 L2: 2 19b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: f78
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
-index: 27742 way: 2 mesi:S valid: 1 dirty: 1 tag: fc8
-index: 27742 way: 3 mesi:E valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:E valid: 1 dirty: 1 tag: fa8
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: f78
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 2 mesi:S valid: 1 dirty: 0 tag: fc8
+index: 27742 way: 3 mesi:E valid: 1 dirty: 0 tag: fb8
+index: 27742 way: 4 mesi:E valid: 1 dirty: 0 tag: fa8
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 L2: 3 f79b1780
 BusOp: 1, Address: 29b17ae, Snoop Result: 2
 L2: 2 29b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
-index: 27742 way: 2 mesi:S valid: 1 dirty: 1 tag: fc8
-index: 27742 way: 3 mesi:E valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:E valid: 1 dirty: 1 tag: fa8
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 2 mesi:S valid: 1 dirty: 0 tag: fc8
+index: 27742 way: 3 mesi:E valid: 1 dirty: 0 tag: fb8
+index: 27742 way: 4 mesi:E valid: 1 dirty: 0 tag: fa8
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 L2: 3 fa9b1780
 BusOp: 1, Address: 39b17ac, Snoop Result: 0
 L2: 2 39b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
-index: 27742 way: 2 mesi:S valid: 1 dirty: 1 tag: fc8
-index: 27742 way: 3 mesi:E valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 2 mesi:S valid: 1 dirty: 0 tag: fc8
+index: 27742 way: 3 mesi:E valid: 1 dirty: 0 tag: fb8
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 L2: 3 fc9b1780
 BusOp: 1, Address: 49b17ac, Snoop Result: 0
 L2: 2 49b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
-index: 27742 way: 2 mesi:S valid: 1 dirty: 1 tag: 48
-index: 27742 way: 3 mesi:E valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 2 mesi:S valid: 1 dirty: 0 tag: 48
+index: 27742 way: 3 mesi:E valid: 1 dirty: 0 tag: fb8
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 L2: 2 49b1780
 BusOp: 3, Address: 49b17ab, Snoop Result: 3
 L2: 2 49b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
 index: 27742 way: 2 mesi:M valid: 1 dirty: 1 tag: 48
-index: 27742 way: 3 mesi:E valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 3 mesi:E valid: 1 dirty: 0 tag: fb8
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 SnoopResult: Address fb9b17ae, SnoopResult: 1
 L2: 3 fb9b17ae
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
 index: 27742 way: 2 mesi:M valid: 1 dirty: 1 tag: 48
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
-index: 27742 way: 6 mesi:E valid: 1 dirty: 1 tag: f88
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:E valid: 1 dirty: 0 tag: f88
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 SnoopResult: Address fb9b17ae, SnoopResult: 0
 BusOp: 4, Address: fb9b17ae, Snoop Result: 2
 L2: 2 fb9b1780
 L2: 3 f89b1780
 BusOp: 4, Address: f79b17ae, Snoop Result: 2
 L2: 2 f79b1780
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
 index: 27742 way: 2 mesi:M valid: 1 dirty: 1 tag: 48
 index: 27742 way: 3 mesi:M valid: 1 dirty: 1 tag: fb8
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
 index: 27742 way: 6 mesi:M valid: 1 dirty: 1 tag: f78
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 SnoopResult: Address 49b17ac, SnoopResult: 0
 SnoopResult: Address fb9b17ae, SnoopResult: 2
 L2: 4 fb9b17ae
 BusOp: 2, Address: fb9b17ae, Snoop Result: 2
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
 index: 27742 way: 2 mesi:M valid: 1 dirty: 1 tag: 48
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
 index: 27742 way: 6 mesi:M valid: 1 dirty: 1 tag: f78
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
 SnoopResult: Address 49b17ac, SnoopResult: 2
 L2: 4 49b17ac
 BusOp: 2, Address: 49b17ac, Snoop Result: 0
-index: 27742 way: 0 mesi:E valid: 1 dirty: 1 tag: 28
-index: 27742 way: 1 mesi:S valid: 1 dirty: 1 tag: fd8
-index: 27742 way: 4 mesi:S valid: 1 dirty: 1 tag: 38
-index: 27742 way: 5 mesi:E valid: 1 dirty: 1 tag: f98
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
 index: 27742 way: 6 mesi:M valid: 1 dirty: 1 tag: f78
-index: 27742 way: 7 mesi:E valid: 1 dirty: 1 tag: 18
+index: 27742 way: 7 mesi:E valid: 1 dirty: 0 tag: 18
+SnoopResult: Address 19b17ae, SnoopResult: 1
+index: 27742 way: 0 mesi:E valid: 1 dirty: 0 tag: 28
+index: 27742 way: 1 mesi:S valid: 1 dirty: 0 tag: fd8
+index: 27742 way: 4 mesi:S valid: 1 dirty: 0 tag: 38
+index: 27742 way: 5 mesi:E valid: 1 dirty: 0 tag: f98
+index: 27742 way: 6 mesi:M valid: 1 dirty: 1 tag: f78
+index: 27742 way: 7 mesi:S valid: 1 dirty: 0 tag: 18
 
 ===========================================================
 Reads: 12	Writes: 3	Hits: 2	Misses: 13
