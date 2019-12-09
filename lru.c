@@ -1,4 +1,6 @@
-
+/*
+Used to get the pseudo least recently used way.
+*/
 int getway(bool pLRUL[])
 {
     if (pLRUL[0] == 1)
@@ -37,6 +39,9 @@ int getway(bool pLRUL[])
     }
 }
 
+/*
+Used to update the pseudo least recently used array.
+*/
 int update(bool pLRUL[], int way)
 {
     switch (way)
