@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <math.h>
+//#define SILENT
 
 //parameters given
 #define CAPACITY 16000000
@@ -93,6 +94,7 @@ int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB);
 int verify(uint32_t address, cLine cache[][SET_ASS]);
 int hitOrMissREAD(uint32_t address, cLine cache[][SET_ASS]);
 int hitOrMissWRITE(uint32_t address, cLine cache[][SET_ASS]);
+int hitOrMissREADI(uint32_t address, cLine cache[][SET_ASS]);
 int emptyInLine(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
 int findMatch(uint32_t index, uint32_t testTag, cLine cache[][SET_ASS]);
 int findEmpty(uint32_t index, cLine cache[][SET_ASS]);

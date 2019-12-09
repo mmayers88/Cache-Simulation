@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 {
     
     printf("starting\n\n");
-    initCache(cache);
     printf("Init Cache...\n");
     /*
     printf(" %x\n",getIndex(0b11111111111111111000000));
@@ -30,7 +29,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     parser(fp);
-    printCache(cache);
     fclose(fp);
     return 0;
 }

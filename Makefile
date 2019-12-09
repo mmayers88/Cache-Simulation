@@ -2,6 +2,7 @@ OBJS = helper.o project.o
 READFILE = readme.txt
 VARIABLE=`cat $(READFILE)`
 
+
 project : $(OBJS)
 	gcc $(OBJS) -o project
 helper.o : helper.c
