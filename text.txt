@@ -6,15 +6,17 @@
 0 fA9b17ae
 0 f99b17ae
 0 f89b17ae
-0 019b17ae
+0 019b17ae                          this fills the cache
 9 9
-0 29b17ae
+0 29b17ae                           this is an eviction way 0
 9 9
-0 39b17ae
+0 39b17ae                           this is an eviction way 4(pLRU out of order)
 9 9
-0 49b17ac
+0 49b17ac                           this is an eviction way 2(back in order)
 9 9
-0 49b17ac
+0 49b17ac                           this will be a hit
 9 9
-1 49b17ab
+1 49b17ab                           Sets way 2 to modified
+9 9
+3 fB9b17ae                          this is an invalidate of way3
 9 9

@@ -61,7 +61,7 @@ int printCache(cLine cache[][SET_ASS])
         {
             if (cache[i][j].valid == 1)
                 //printf("%d|%c|%x|%x|%x|%x|\n", j,cache[i][j].mesi, cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag, cache[i][j].byte_sel);
-                printf("index: %d way: %d mesi:%c valid: %x dirty: %x tag: %x\n",i, j,cache[i][j].mesi, cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag);
+                printf("index: %d way: %d mesi:%c valid: %x dirty: %x tag: %x\n", i, j, cache[i][j].mesi, cache[i][j].valid, cache[i][j].dirty, cache[i][j].tag);
         }
         //printf("\n");
     }
@@ -435,12 +435,15 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     tempTag = tempTag >> 20;
     way = findMatch(index, tempTag, cache);
 
-    if (way == -1)
+    if (way == 0)
+    {
+        printf("\nhere\n");
         PutSnoopResult(address, NOHIT);
-    return NOHIT;
-
+        return NOHIT;
+    }
     if (cache[index][way - 1].mesi != 'I')
     {
+        printf("\nhere\n");
         //putsnoop result Hit
         PutSnoopResult(address, HIT);
         //set mesiB I and valid 0
@@ -466,10 +469,12 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     tempTag = tempTag >> 20;
     way = findMatch(index, tempTag, cache);
 
-    if (way == -1)
+    if (way == 0)
+    {
         //putsnoop NOHIT
         PutSnoopResult(address, NOHIT);
-    return NOHIT;
+        return NOHIT;
+    }
 
     if (cache[index][way - 1].mesi == 'M')
     {
@@ -507,11 +512,12 @@ int snoopX(int address, cLine cache[][SET_ASS])
     tempTag = tempTag >> 20;
     way = findMatch(index, tempTag, cache);
 
-    if (way == -1)
+    if (way == 0)
+    {
         PutSnoopResult(address, NOHIT);
-    return NOHIT;
-    //PutSnoopResult() NOHIT
-
+        return NOHIT;
+        //PutSnoopResult() NOHIT
+    }
     if (cache[index][way - 1].mesi == 'M')
     {
         //put snoop HITM
