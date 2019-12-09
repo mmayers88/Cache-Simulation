@@ -13,3 +13,5 @@ clean:
 	rm $(OBJS) project
 run : project
 	./project text.txt
+silent : project
+	gcc -DSILENT helper.c project.c -o project
