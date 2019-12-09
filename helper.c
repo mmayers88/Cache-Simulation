@@ -169,6 +169,7 @@ int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB)
 {
     uint32_t index = getIndex(address);
     cache[index][way].byte_sel = address & 0x3F; //lower 6 bits
+    cache[index][way].byte_sel = 0;
     uint32_t tag = makeMask(21, 32) & address;
     cache[index][way].tag = tag >> 20;
     cache[index][way].valid = true;
