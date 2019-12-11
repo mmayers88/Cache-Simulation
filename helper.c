@@ -154,7 +154,7 @@ uint32_t makeMask(uint32_t a, uint32_t b)
 uint32_t returnAddress(uint32_t index, cLine cache[][SET_ASS], int way)
 {
     uint32_t address = 0;
-    address = ((cache[index][way].tag << 20) | (index << 6) | cache[index][way].byte_sel);
+    return address = ((cache[index][way].tag << 21) | (index << 6));
 };
 
 int getIndex(uint32_t address)
@@ -170,7 +170,7 @@ int addToCLine(uint32_t address, cLine cache[][SET_ASS], int way, char mesiB)
     cache[index][way].byte_sel = address & 0x3F; //lower 6 bits
     cache[index][way].byte_sel = 0;
     uint32_t tag = makeMask(21, 32) & address;
-    cache[index][way].tag = tag >> 20;
+    cache[index][way].tag = tag >> 21;
     cache[index][way].valid = true;
     cache[index][way].dirty = false;
     cache[index][way].mesi = mesiB;
@@ -180,7 +180,7 @@ int verify(uint32_t address, cLine cache[][SET_ASS])
 {
     uint32_t index = getIndex(address);
     uint32_t tempTag = makeMask(21, 32) & address;
-    tempTag = tempTag >> 20;
+    tempTag = tempTag >> 21;
     int x = findMatch(index, tempTag, cache);
     //printf("\n%d\n", x);
     if (x > 0) //hit
@@ -444,7 +444,7 @@ int snoopInval(int address, cLine cache[][SET_ASS])
     int SnoopRes;
 
     uint32_t tempTag = makeMask(21, 32) & address;
-    tempTag = tempTag >> 20;
+    tempTag = tempTag >> 21;
     way = findMatch(index, tempTag, cache);
 
     if (way == 0)
@@ -476,7 +476,7 @@ int snoopRd(int address, cLine cache[][SET_ASS])
     int SnoopRes;
 
     uint32_t tempTag = makeMask(21, 32) & address;
-    tempTag = tempTag >> 20;
+    tempTag = tempTag >> 21;
     way = findMatch(index, tempTag, cache);
 
     if (way == 0)
@@ -519,7 +519,7 @@ int snoopX(int address, cLine cache[][SET_ASS])
     int SnoopRes;
 
     uint32_t tempTag = makeMask(21, 32) & address;
-    tempTag = tempTag >> 20;
+    tempTag = tempTag >> 21;
     way = findMatch(index, tempTag, cache);
 
     if (way == 0)

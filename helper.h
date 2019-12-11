@@ -12,8 +12,6 @@
 //#define SILENT
 
 //parameters given
-#define CAPACITY 16000000
-#define LINE_SIZE 64
 #define SET_ASS 8
 //#define LINES (CAPACITY/LINE_SIZE) / SET_ASS
 #define LINES 32768
