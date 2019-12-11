@@ -12,8 +12,8 @@ project.o : project.c
 clean:
 	rm $(OBJS) project
 run : project
-	./project text.txt
+	./project test.txt
 silent : project
 	gcc -DSILENT helper.c project.c -o project
 output : project
-	./project text.txt > output.txt
+	./project test.txt > output.txt
